@@ -5,6 +5,16 @@
 
 using namespace std;
 
+//declarar las funciones
+void mostrarMenu();
+void ingresarPaciente(vector<Paciente>& pacientes);
+void modificarPaciente(vector<Paciente>& pacientes);
+void eliminarPaciente(vector<Paciente>& pacientes);
+void reporteGeneral(vector<Paciente>& pacientes);
+void generarArchivo(vector<Paciente>& pacientes);
+void buscarPacientePorID(vector<Paciente>& pacientes);
+
+
 //crea una clase para guardar los datos de los pacientes
 class Paciente {
 public:
