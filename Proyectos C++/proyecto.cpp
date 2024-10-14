@@ -1,163 +1,106 @@
 #include <iostream>
-#include <limits> // Para manejar la entrada
-#include <string> // Para usar std::string y getline
-#include <fstream> // Para manejar archivos
+#include <vector> //para la manipulación de vectores
+#include <string>
+#include <fstream> // Para la generación de archivos
 
 using namespace std;
 
-// Declaración de funciones
-void IngresarPaciente();
-/* void ModificarPaciente();
-void EliminarPaciente();
-void BuscarPaciente();
-void ListarPacientes();
-void ArchivoPacientes(); */
-void EsperarTecla();
-void LimpiarPantalla();
-
-int main() {
-    int opcion;
-
-    // Ciclo para mostrar el menú hasta que se decida salir
-    do {
-        // Mostrar el menú
-        LimpiarPantalla();
-        cout << "Menú de opciones:" << endl;
-        cout << "1. Ingresar paciente" << endl;
-      /*   cout << "2. Modificar paciente" << endl;
-        cout << "3. Eliminar paciente" << endl;
-        cout << "4. Buscar paciente" << endl;
-        cout << "5. Listar pacientes" << endl;
-        cout << "6. Archivo de pacientes" << endl; */
-        cout << "7. Salir" << endl;
-        cout << "Seleccione una opción: ";
-        cin >> opcion;
-
-        // Validar la entrada para asegurarse de que sea un entero
-        if(cin.fail()) {
-            cin.clear(); // Limpiar el estado de error
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignorar la entrada no válida
-            opcion = -1; // Asignar una opción inválida
-        }
-
-        switch(opcion) {
-            case 1:
-                IngresarPaciente();
-                break;
-          /*   case 2:
-                ModificarPaciente();
-                break;
-            case 3:
-                EliminarPaciente();
-                break;
-            case 4:
-                BuscarPaciente();
-                break;
-            case 5:
-                ListarPacientes();
-                break;
-            case 6:
-                ArchivoPacientes();
-                break; */
-            case 7:
-                cout << "Saliendo del programa..." << endl;
-                break;
-            default:
-                cout << "Opción inválida, por favor seleccione una opción válida." << endl;
-                EsperarTecla();
-                break;
-        }
-    } while(opcion != 7);
-
-    return 0;
-}
-
-// Función para limpiar la pantalla
-void LimpiarPantalla() {
-    // Dependiendo del sistema operativo, se usa "cls" para Windows y "clear" para Unix/Linux/macOS
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
-}
-
-// Función para esperar a que el usuario presione una tecla
-void EsperarTecla() {
-    cout << "Presione Enter para continuar...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignorar cualquier entrada pendiente
-    cin.get(); // Esperar a que el usuario presione Enter
-}
-
-
-
-// Subalgoritmo para ingresar un paciente
-struct Paciente {
-    string dpi;
-    string nombreCompleto;
+//crea una clase para guardar los datos de los pacientes
+class Paciente {
+public:
+    string id;
+    string nombre;
     int edad;
     string genero;
     string direccion;
     string telefono;
     string fechaIngreso;
-    string diagnosticoPrincipal;
+    string diagnostico;
+
+    // Constructor
+    Paciente(string _id, string _nombre, int _edad, string _genero, string _direccion, string _telefono, string _fechaIngreso, string _diagnostico)
+        : id(_id), nombre(_nombre), edad(_edad), genero(_genero), direccion(_direccion), telefono(_telefono), fechaIngreso(_fechaIngreso), diagnostico(_diagnostico) {}
 };
 
-bool esNumeroPositivo(int numero) {
-    return numero > 0;
+// Función para ingresar un nuevo paciente
+void ingresarPaciente(vector<Paciente>& pacientes) {
+    string id, nombre, genero, direccion, telefono, fechaIngreso, diagnostico;
+    int edad;
+
+    cout << "Ingrese el ID del paciente (DPI): ";
+    cin >> id;
+    cout << "Ingrese el nombre completo: ";
+    cin.ignore();
+    getline(cin, nombre);
+    cout << "Ingrese la edad: ";
+    cin >> edad;
+    cout << "Ingrese el género: ";
+    cin >> genero;
+    cout << "Ingrese la dirección: ";
+    cin.ignore();
+    getline(cin, direccion);
+    cout << "Ingrese el número de teléfono: ";
+    cin >> telefono;
+    cout << "Ingrese la fecha de ingreso: ";
+    cin >> fechaIngreso;
+    cout << "Ingrese el diagnóstico principal: ";
+    cin.ignore();
+    getline(cin, diagnostico);
+
+    // Añadir el paciente al vector
+    pacientes.push_back(Paciente(id, nombre, edad, genero, direccion, telefono, fechaIngreso, diagnostico));
+    cout << "Paciente ingresado con éxito." << endl;
 }
 
-void ingresarPaciente(Paciente& paciente) {
-    cout << "Ingrese el Número de Identificación (DPI): ";
-    cin >> paciente.dpi;
-
-    cout << "Ingrese el Nombre Completo: ";
-    cin.ignore(); // Ignora el salto de línea del cin anterior
-    getline(cin, paciente.nombreCompleto);
-
-    // Validar edad
-    do {
-        cout << "Ingrese la Edad (debe ser un número positivo): ";
-        cin >> paciente.edad;
-
-        if (!esNumeroPositivo(paciente.edad)) {
-            cout << "Error: La edad debe ser un número positivo.\n";
-        }
-    } while (!esNumeroPositivo(paciente.edad));
-
-    cout << "Ingrese el Género: ";
-    cin.ignore();
-    getline(cin, paciente.genero);
-
-    cout << "Ingrese la Dirección: ";
-    getline(cin, paciente.direccion);
-
-    // Validar número de teléfono
-    do {
-        cout << "Ingrese el Número de Teléfono (debe ser un número positivo): ";
-        cin >> paciente.telefono;
-
-        if (paciente.telefono.empty() || !isdigit(paciente.telefono[0])) {
-            cout << "Error: El número de teléfono debe ser un valor válido.\n";
-        }
-    } while (paciente.telefono.empty() || !isdigit(paciente.telefono[0]));
-
-    cout << "Ingrese la Fecha de Ingreso: ";
-    cin.ignore();
-    getline(cin, paciente.fechaIngreso);
-
-    cout << "Ingrese el Diagnóstico Principal: ";
-    getline(cin, paciente.diagnosticoPrincipal);
+// Función principal para mostrar el menú
+void mostrarMenu() {
+    cout << "Sistema de Control de Pacientes\n";
+    cout << "1. Ingreso de Paciente\n";
+    cout << "2. Modificación de Datos del Paciente\n";
+    cout << "3. Eliminar Paciente\n";
+    cout << "4. Reporte General de Todos los Pacientes\n";
+    cout << "5. Generar Archivo de Impresión\n";
+    cout << "6. Buscar Paciente por ID\n"; // Nueva opción
+    cout << "7. Salir\n";
+    cout << "Seleccione una opción: ";
 }
 
-void mostrarPaciente(const Paciente& paciente) {
-    cout << "\nDetalles del Paciente:\n";
-    cout << "DPI: " << paciente.dpi << endl;
-    cout << "Nombre Completo: " << paciente.nombreCompleto << endl;
-    cout << "Edad: " << paciente.edad << endl;
-    cout << "Género: " << paciente.genero << endl;
-    cout << "Dirección: " << paciente.direccion << endl;
-    cout << "Número de Teléfono: " << paciente.telefono << endl;
-    cout << "Fecha de Ingreso: " << paciente.fechaIngreso << endl;
-    cout << "Diagnóstico Principal: " << paciente.diagnosticoPrincipal << endl;
+
+int main() {
+    vector<Paciente> pacientes;
+    int opcion;
+
+    do {
+        mostrarMenu();
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            ingresarPaciente(pacientes);
+            break;
+     /*    case 2:
+            modificarPaciente(pacientes);
+            break;
+        case 3:
+            eliminarPaciente(pacientes);
+            break;
+        case 4:
+            reporteGeneral(pacientes);
+            break;
+        case 5:
+            generarArchivo(pacientes);
+            break;
+        case 6:
+            buscarPacientePorID(pacientes); // Llamada a la nueva función
+            break; */
+        case 7:
+            cout << "Saliendo del sistema..." << endl;
+            break;
+        default:
+            cout << "Opción no válida. Intente de nuevo." << endl;
+        }
+        cout << endl;
+    } while (opcion != 7);
+
+    return 0;
 }
