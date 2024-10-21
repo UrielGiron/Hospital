@@ -10,25 +10,79 @@ void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
     string id, nombre, genero, direccion, telefono, fechaIngreso, diagnostico;
     int edad;
 
-    cout << "Ingrese el ID del paciente (DPI): ";
-    cin >> id;
-    cout << "Ingrese el nombre completo: ";
-    cin.ignore();
-    getline(cin, nombre);
-    cout << "Ingrese la edad: ";
-    cin >> edad;
-    cout << "Ingrese el género: ";
-    cin >> genero;
-    cout << "Ingrese la dirección: ";
-    cin.ignore();
-    getline(cin, direccion);
-    cout << "Ingrese el número de teléfono: ";
-    cin >> telefono;
-    cout << "Ingrese la fecha de ingreso: ";
-    cin >> fechaIngreso;
-    cout << "Ingrese el diagnóstico principal: ";
-    cin.ignore();
-    getline(cin, diagnostico);
+    // Validación de ID único
+    bool idUnico;
+    do {
+        idUnico = true;
+        cout << "Ingrese el ID del paciente (DPI): ";
+        cin >> id;
+        for (const auto& existingId : ids) {
+            if (id == existingId) {
+                cout << "Error: El ID ya existe. Ingrese un ID único." << endl;
+                idUnico = false;
+                break;
+            }
+        }
+    } while (!idUnico);
+
+    cin.ignore(); // Limpiar el buffer antes de getline
+    do {
+        cout << "Ingrese el nombre completo: ";
+        getline(cin, nombre);
+        if (nombre.empty()) {
+            cout << "Error: El nombre es obligatorio." << endl;
+        }
+    } while (nombre.empty());
+
+    do {
+        cout << "Ingrese la edad: ";
+        cin >> edad;
+        if (edad <= 0) {
+            cout << "Error: La edad debe ser un número positivo." << endl;
+        }
+    } while (edad <= 0);
+
+    cin.ignore(); // Limpiar el buffer antes de getline
+    do {
+        cout << "Ingrese el género: ";
+        getline(cin, genero);
+        if (genero.empty()) {
+            cout << "Error: El género es obligatorio." << endl;
+        }
+    } while (genero.empty());
+
+    do {
+        cout << "Ingrese la dirección: ";
+        getline(cin, direccion);
+        if (direccion.empty()) {
+            cout << "Error: La dirección es obligatoria." << endl;
+        }
+    } while (direccion.empty());
+
+    do {
+        cout << "Ingrese el número de teléfono: ";
+        cin >> telefono;
+        if (telefono.empty() || telefono.find_first_not_of("0123456789") != string::npos) {
+            cout << "Error: El teléfono debe ser un número positivo." << endl;
+        }
+    } while (telefono.empty() || telefono.find_first_not_of("0123456789") != string::npos);
+
+    cin.ignore(); // Limpiar el buffer antes de getline
+    do {
+        cout << "Ingrese la fecha de ingreso: ";
+        getline(cin, fechaIngreso);
+        if (fechaIngreso.empty()) {
+            cout << "Error: La fecha de ingreso es obligatoria." << endl;
+        }
+    } while (fechaIngreso.empty());
+
+    do {
+        cout << "Ingrese el diagnóstico principal: ";
+        getline(cin, diagnostico);
+        if (diagnostico.empty()) {
+            cout << "Error: El diagnóstico es obligatorio." << endl;
+        }
+    } while (diagnostico.empty());
 
     ids.push_back(id);
     nombres.push_back(nombre);
@@ -42,7 +96,7 @@ void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
     cout << "Paciente ingresado con éxito." << endl;
 }
 
-// Función para modificar los datos de un paciente
+//Funcion para Modificar los datos de un paciente
 void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     string id;
     cout << "Ingrese el ID del paciente que desea modificar: ";
@@ -57,9 +111,9 @@ void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>
             cout << "Edad: ";
             cin >> edades[i];
             cout << "Género: ";
-            cin >> generos[i];
-            cout << "Dirección: ";
             cin.ignore();
+            getline(cin, generos[i]); // Corrected to use getline
+            cout << "Dirección: ";
             getline(cin, direcciones[i]);
             cout << "Teléfono: ";
             cin >> telefonos[i];
