@@ -61,7 +61,35 @@ void ingresarPaciente(vector<Paciente>& pacientes) {
     pacientes.push_back(Paciente(id, nombre, edad, genero, direccion, telefono, fechaIngreso, diagnostico));
     cout << "Paciente ingresado con éxito." << endl;
 }
+// Función para eliminar un paciente por ID con confirmación
+void eliminarPaciente(vector<Paciente>& pacientes) {
+    string id;
+    cout << "Ingrese el ID del paciente que desea eliminar: ";
+    cin >> id;
+    bool encontrado = false;
+    for (auto it = pacientes.begin(); it != pacientes.end(); ++it) {
+        if (it->id == id) {
+            char confirmacion;
+            // Mostrar mensaje de confirmación
+            cout << "Está seguro de que desea eliminar al paciente con DPI " << id << "? (S/N): ";
+            cin >> confirmacion;
 
+            if (confirmacion == 'S' || confirmacion == 's') {
+                pacientes.erase(it);  // Eliminar el paciente
+                cout << "Paciente con ID " << id << " eliminado con éxito." << endl;
+            } else {
+                cout << "Eliminación cancelada." << endl;
+            }
+
+            encontrado = true;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontró ningún paciente con ID " << id << "." << endl;
+    }
+}
 // Función principal para mostrar el menú
 void mostrarMenu() {
     cout << "Sistema de Control de Pacientes\n";
