@@ -5,12 +5,60 @@
 
 using namespace std;
 
-// Función para ingresar un nuevo paciente
+// Funcion para cargar los datos desde el archivo
+void cargarDatos(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
+    ifstream archivo("base_datos.txt");
+    if (archivo.is_open()) {
+        string id, nombre, genero, direccion, telefono, fechaIngreso, diagnostico;
+        int edad;
+        while (archivo >> id >> edad) {
+            archivo.ignore(); // Ignorar el salto de linea
+            getline(archivo, nombre);
+            getline(archivo, genero);
+            getline(archivo, direccion);
+            archivo >> telefono;
+            archivo.ignore();
+            getline(archivo, fechaIngreso);
+            getline(archivo, diagnostico);
+
+            ids.push_back(id);
+            edades.push_back(edad);
+            nombres.push_back(nombre);
+            generos.push_back(genero);
+            direcciones.push_back(direccion);
+            telefonos.push_back(telefono);
+            fechasIngreso.push_back(fechaIngreso);
+            diagnosticos.push_back(diagnostico);
+        }
+        archivo.close();
+    }
+}
+
+// Funcion para guardar los datos en el archivo
+void guardarDatos(const vector<string>& ids, const vector<string>& nombres, const vector<int>& edades, const vector<string>& generos, const vector<string>& direcciones, const vector<string>& telefonos, const vector<string>& fechasIngreso, const vector<string>& diagnosticos) {
+    ofstream archivo("base_datos.txt");
+    if (archivo.is_open()) {
+        for (size_t i = 0; i < ids.size(); ++i) {
+            archivo << ids[i] << " " << edades[i] << "\n"
+                    << nombres[i] << "\n"
+                    << generos[i] << "\n"
+                    << direcciones[i] << "\n"
+                    << telefonos[i] << "\n"
+                    << fechasIngreso[i] << "\n"
+                    << diagnosticos[i] << "\n";
+        }
+        archivo.close();
+    } else {
+        cout << "Error al guardar los datos." << endl;
+    }
+}
+
+// Funcion para ingresar un paciente
 void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     string id, nombre, genero, direccion, telefono, fechaIngreso, diagnostico;
     int edad;
 
-    // Validación de ID único
+    // Validacion de ID unico
     bool idUnico;
     do {
         idUnico = true;
@@ -25,7 +73,7 @@ void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
         }
     } while (!idUnico);
 
-    cin.ignore(); // Limpiar el buffer antes de getline
+    cin.ignore(); // Limpia el buffer antes de getline
     do {
         cout << "Ingrese el nombre completo: ";
         getline(cin, nombre);
@@ -38,36 +86,36 @@ void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
         cout << "Ingrese la edad: ";
         cin >> edad;
         if (edad <= 0) {
-            cout << "Error: La edad debe ser un número positivo." << endl;
+            cout << "Error: La edad debe ser un numero positivo." << endl;
         }
     } while (edad <= 0);
 
-    cin.ignore(); // Limpiar el buffer antes de getline
+    cin.ignore(); // Limpiar buffer antes de getline
     do {
-        cout << "Ingrese el género: ";
+        cout << "Ingrese el genero: ";
         getline(cin, genero);
         if (genero.empty()) {
-            cout << "Error: El género es obligatorio." << endl;
+            cout << "Error: El genero es obligatorio." << endl;
         }
     } while (genero.empty());
 
     do {
-        cout << "Ingrese la dirección: ";
+        cout << "Ingrese la direccion: ";
         getline(cin, direccion);
         if (direccion.empty()) {
-            cout << "Error: La dirección es obligatoria." << endl;
+            cout << "Error: La direccion es obligatoria." << endl;
         }
     } while (direccion.empty());
 
     do {
-        cout << "Ingrese el número de teléfono: ";
+        cout << "Ingrese el numero de telefono: ";
         cin >> telefono;
         if (telefono.empty() || telefono.find_first_not_of("0123456789") != string::npos) {
-            cout << "Error: El teléfono debe ser un número positivo." << endl;
+            cout << "Error: El telefono debe ser un numero positivo." << endl;
         }
     } while (telefono.empty() || telefono.find_first_not_of("0123456789") != string::npos);
 
-    cin.ignore(); // Limpiar el buffer antes de getline
+    cin.ignore(); // Limpiar buffer antes de getline
     do {
         cout << "Ingrese la fecha de ingreso: ";
         getline(cin, fechaIngreso);
@@ -77,10 +125,10 @@ void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
     } while (fechaIngreso.empty());
 
     do {
-        cout << "Ingrese el diagnóstico principal: ";
+        cout << "Ingrese el diagnostico principal: ";
         getline(cin, diagnostico);
         if (diagnostico.empty()) {
-            cout << "Error: El diagnóstico es obligatorio." << endl;
+            cout << "Error: El diagnostico es obligatorio." << endl;
         }
     } while (diagnostico.empty());
 
@@ -93,10 +141,10 @@ void ingresarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
     fechasIngreso.push_back(fechaIngreso);
     diagnosticos.push_back(diagnostico);
 
-    cout << "Paciente ingresado con éxito." << endl;
+    cout << "Paciente ingresado con exito." << endl;
 }
 
-//Funcion para Modificar los datos de un paciente
+// Funcion para modificar los datos de un paciente
 void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     string id;
     cout << "Ingrese el ID del paciente que desea modificar: ";
@@ -110,16 +158,16 @@ void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>
             getline(cin, nombres[i]);
             cout << "Edad: ";
             cin >> edades[i];
-            cout << "Género: ";
+            cout << "Genero: ";
             cin.ignore();
-            getline(cin, generos[i]); // Corrected to use getline
-            cout << "Dirección: ";
+            getline(cin, generos[i]); // Consume el salto de linea
+            cout << "Direccion: ";
             getline(cin, direcciones[i]);
-            cout << "Teléfono: ";
+            cout << "Telefono: ";
             cin >> telefonos[i];
             cout << "Fecha de ingreso: ";
             cin >> fechasIngreso[i];
-            cout << "Diagnóstico principal: ";
+            cout << "Diagnostico principal: ";
             cin.ignore();
             getline(cin, diagnosticos[i]);
 
@@ -130,7 +178,7 @@ void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>
     cout << "Paciente no encontrado." << endl;
 }
 
-// Función para eliminar un paciente
+// Funcion para eliminar un paciente
 void eliminarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     string id;
     cout << "Ingrese el ID del paciente que desea eliminar: ";
@@ -153,18 +201,18 @@ void eliminarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
     cout << "Paciente no encontrado." << endl;
 }
 
-// Función para mostrar el reporte general de pacientes
+// Funcion para generar un reporte de todos los pacientes
 void reporteGeneral(const vector<string>& ids, const vector<string>& nombres, const vector<int>& edades, const vector<string>& generos, const vector<string>& direcciones, const vector<string>& telefonos, const vector<string>& fechasIngreso, const vector<string>& diagnosticos) {
     cout << "Reporte de Todos los Pacientes:" << endl;
     for (size_t i = 0; i < ids.size(); ++i) {
         cout << "ID: " << ids[i] << ", Nombre: " << nombres[i]
-             << ", Edad: " << edades[i] << ", Género: " << generos[i]
-             << ", Dirección: " << direcciones[i] << ", Teléfono: " << telefonos[i]
-             << ", Fecha de Ingreso: " << fechasIngreso[i] << ", Diagnóstico: " << diagnosticos[i] << endl;
+             << ", Edad: " << edades[i] << ", Genero: " << generos[i]
+             << ", Direccion: " << direcciones[i] << ", Telefono: " << telefonos[i]
+             << ", Fecha de Ingreso: " << fechasIngreso[i] << ", Diagnostico: " << diagnosticos[i] << endl;
     }
 }
 
-// Función para generar un archivo con el reporte de pacientes
+// Funcion para generar un archivo con el reporte de los pacientes
 void generarArchivo(const vector<string>& ids, const vector<string>& nombres, const vector<int>& edades, const vector<string>& generos, const vector<string>& direcciones, const vector<string>& telefonos, const vector<string>& fechasIngreso, const vector<string>& diagnosticos) {
     ofstream archivo("reporte_pacientes.txt");
     if (archivo.is_open()) {
@@ -172,9 +220,9 @@ void generarArchivo(const vector<string>& ids, const vector<string>& nombres, co
         archivo << "-----------------------------------\n";
         for (size_t i = 0; i < ids.size(); ++i) {
             archivo << "ID: " << ids[i] << ", Nombre: " << nombres[i]
-                    << ", Edad: " << edades[i] << ", Género: " << generos[i]
-                    << ", Dirección: " << direcciones[i] << ", Teléfono: " << telefonos[i]
-                    << ", Fecha de Ingreso: " << fechasIngreso[i] << ", Diagnóstico: " << diagnosticos[i] << endl;
+                    << ", Edad: " << edades[i] << ", Genero: " << generos[i]
+                    << ", Direccion: " << direcciones[i] << ", Telefono: " << telefonos[i]
+                    << ", Fecha de Ingreso: " << fechasIngreso[i] << ", Diagnostico: " << diagnosticos[i] << endl;
         }
         archivo.close();
         cout << "Archivo generado exitosamente: reporte_pacientes.txt" << endl;
@@ -183,7 +231,7 @@ void generarArchivo(const vector<string>& ids, const vector<string>& nombres, co
     }
 }
 
-// Función para buscar paciente por su ID
+// Funcion para buscar un paciente por ID
 void buscarPacientePorID(const vector<string>& ids, const vector<string>& nombres, const vector<int>& edades, const vector<string>& generos, const vector<string>& direcciones, const vector<string>& telefonos, const vector<string>& fechasIngreso, const vector<string>& diagnosticos) {
     string id;
     cout << "Ingrese el ID del paciente que desea buscar: ";
@@ -195,11 +243,11 @@ void buscarPacientePorID(const vector<string>& ids, const vector<string>& nombre
             cout << "ID: " << ids[i] << endl;
             cout << "Nombre: " << nombres[i] << endl;
             cout << "Edad: " << edades[i] << endl;
-            cout << "Género: " << generos[i] << endl;
-            cout << "Dirección: " << direcciones[i] << endl;
-            cout << "Teléfono: " << telefonos[i] << endl;
+            cout << "Genero: " << generos[i] << endl;
+            cout << "Direccion: " << direcciones[i] << endl;
+            cout << "Telefono: " << telefonos[i] << endl;
             cout << "Fecha de Ingreso: " << fechasIngreso[i] << endl;
-            cout << "Diagnóstico: " << diagnosticos[i] << endl;
+            cout << "Diagnostico: " << diagnosticos[i] << endl;
             return;
         }
     }
@@ -207,20 +255,21 @@ void buscarPacientePorID(const vector<string>& ids, const vector<string>& nombre
     cout << "Paciente no encontrado con el ID proporcionado." << endl;
 }
 
-// Función principal para mostrar el menú
+// Funcion para mostrar el menu
 void mostrarMenu() {
     cout << "Sistema de Control de Pacientes\n";
     cout << "1. Ingreso de Paciente\n";
-    cout << "2. Modificación de Datos del Paciente\n";
-    cout << "3. Eliminar Paciente\n";
-    cout << "4. Reporte General de Todos los Pacientes\n";
-    cout << "5. Generar Archivo de Impresión\n";
-    cout << "6. Buscar Paciente por ID\n";
+    cout << "2. Modificacion de Datos del Paciente\n";
+    cout << "3. Reporte General de Todos los Pacientes\n";
+    cout << "4. Buscar Paciente por ID\n";
+    cout << "5. Generar Archivo de Impresion\n";
+    cout << "6. Eliminar Paciente\n";
     cout << "7. Salir\n";
-    cout << "Seleccione una opción: ";
+    cout << "Seleccione una opcion: ";
 }
 
 int main() {
+    // Vectores para almacenar los datos de los pacientes
     vector<string> ids;
     vector<string> nombres;
     vector<int> edades;
@@ -229,6 +278,8 @@ int main() {
     vector<string> telefonos;
     vector<string> fechasIngreso;
     vector<string> diagnosticos;
+
+    cargarDatos(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
 
     int opcion;
 
@@ -244,22 +295,23 @@ int main() {
                 modificarPaciente(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
                 break;
             case 3:
-                eliminarPaciente(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
+                reporteGeneral(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
                 break;
             case 4:
-                reporteGeneral(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
+                buscarPacientePorID(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
                 break;
             case 5:
                 generarArchivo(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
                 break;
             case 6:
-                buscarPacientePorID(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
+                eliminarPaciente(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
                 break;
             case 7:
                 cout << "Saliendo del sistema..." << endl;
+                guardarDatos(ids, nombres, edades, generos, direcciones, telefonos, fechasIngreso, diagnosticos);
                 break;
             default:
-                cout << "Opción no válida. Intente de nuevo." << endl;
+                cout << "Opcion no válida. Intente de nuevo." << endl;
         }
         cout << endl;
     } while (opcion != 7);
