@@ -202,7 +202,7 @@ void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>
     cout << "Paciente no encontrado." << endl;
 }
 
-// Funcion para eliminar un paciente
+// Función para eliminar un paciente
 void eliminarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     string id;
     cout << "Ingrese el ID del paciente que desea eliminar: ";
@@ -210,15 +210,24 @@ void eliminarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
 
     for (size_t i = 0; i < ids.size(); ++i) {
         if (ids[i] == id) {
-            ids.erase(ids.begin() + i);
-            nombres.erase(nombres.begin() + i);
-            edades.erase(edades.begin() + i);
-            generos.erase(generos.begin() + i);
-            direcciones.erase(direcciones.begin() + i);
-            telefonos.erase(telefonos.begin() + i);
-            fechasIngreso.erase(fechasIngreso.begin() + i);
-            diagnosticos.erase(diagnosticos.begin() + i);
-            cout << "Paciente eliminado exitosamente." << endl;
+            cout << "Paciente encontrado: " << nombres[i] << endl;
+            cout << "¿Está seguro de que desea eliminar este paciente? (s/n): ";
+            char confirmacion;
+            cin >> confirmacion;
+            
+            if (confirmacion == 's' || confirmacion == 'S') {
+                ids.erase(ids.begin() + i);
+                nombres.erase(nombres.begin() + i);
+                edades.erase(edades.begin() + i);
+                generos.erase(generos.begin() + i);
+                direcciones.erase(direcciones.begin() + i);
+                telefonos.erase(telefonos.begin() + i);
+                fechasIngreso.erase(fechasIngreso.begin() + i);
+                diagnosticos.erase(diagnosticos.begin() + i);
+                cout << "Paciente eliminado exitosamente." << endl;
+            } else {
+                cout << "Eliminación cancelada." << endl;
+            }
             return;
         }
     }
