@@ -1,0 +1,34 @@
+Hospital: Hospital General UMG
+Fecha de Generacion: 22-10-2024
+-----------------------------------
+1111111111111
+49
+MAria Perez
+Femenino
+3 Av G-78 Zona 9
+12345678
+12/12/2024
+Dolor de Espalda
+Hospital: Hospital General UMG
+Fecha de Generacion: 22-10-2024
+-----------------------------------
+3057077950301
+28
+Darwin Uriel Giron Perez
+Masculino 
+3 av H-27 zona 1
+33982609
+22/10/2024
+Dolor de Garganta
+-----------------------------------
+Hospital: Hospital General UMG
+Fecha de Generacion: 22-10-2024
+-----------------------------------
+1234567891234
+26
+Heber Giron
+Masculino 
+12 av H-78 Zona 12
+12345678
+22/10/2024
+Miopia

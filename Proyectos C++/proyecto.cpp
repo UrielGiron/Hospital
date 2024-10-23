@@ -2,25 +2,40 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <ctime>
 
 using namespace std;
+
+//Funcion para agregar fecha de ingreso de datos
+string obtenerFechaActual() {
+    time_t t = time(nullptr);
+    tm* timePtr = localtime(&t);
+    char buffer[11];
+    strftime(buffer, sizeof(buffer), "%d-%m-%Y", timePtr);
+    return string(buffer);
+}
 
 // Funcion para cargar los datos desde el archivo
 void cargarDatos(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     ifstream archivo("base_datos.txt");
     if (archivo.is_open()) {
-        string id, nombre, genero, direccion, telefono, fechaIngreso, diagnostico;
+        string header, id, nombre, genero, direccion, telefono, fechaIngreso, diagnostico;
         int edad;
+
+        // Leer las primeras dos lineas del archivo
+       /*  getline(archivo, header);
+        getline(archivo, header);
+ */
         while (archivo >> id >> edad) {
-            archivo.ignore(); // Ignorar el salto de linea
+            archivo.ignore(); // Consume el salto de linea
             getline(archivo, nombre);
             getline(archivo, genero);
             getline(archivo, direccion);
             archivo >> telefono;
-            archivo.ignore();
-            getline(archivo, fechaIngreso);
-            getline(archivo, diagnostico);
-
+            archivo.ignore(); // Consume el salto de linea
+            getline(archivo, fechaIngreso);// Se agrega la fecha de ingreso
+            getline(archivo, diagnostico);// Se agrega el diagnostico
+            // Agregar los datos a los vectores
             ids.push_back(id);
             edades.push_back(edad);
             nombres.push_back(nombre);
@@ -36,10 +51,19 @@ void cargarDatos(vector<string>& ids, vector<string>& nombres, vector<int>& edad
 
 // Funcion para guardar los datos en el archivo
 void guardarDatos(const vector<string>& ids, const vector<string>& nombres, const vector<int>& edades, const vector<string>& generos, const vector<string>& direcciones, const vector<string>& telefonos, const vector<string>& fechasIngreso, const vector<string>& diagnosticos) {
-    ofstream archivo("base_datos.txt");
+    ofstream archivo("base_datos.txt", ios::app);
     if (archivo.is_open()) {
+        string nombreHospital = "Hospital General UMG";
+        string fechaActual = obtenerFechaActual();
+
+        archivo << "-----------------------------------\n";
+        archivo << "Hospital: " << nombreHospital << "\n";
+        archivo << "Fecha de Generacion: " << fechaActual << "\n";
+        archivo << "-----------------------------------\n";
+
         for (size_t i = 0; i < ids.size(); ++i) {
-            archivo << ids[i] << " " << edades[i] << "\n"
+            archivo << ids[i] << "\n" 
+                    << edades[i] << "\n"
                     << nombres[i] << "\n"
                     << generos[i] << "\n"
                     << direcciones[i] << "\n"
@@ -178,7 +202,7 @@ void modificarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>
     cout << "Paciente no encontrado." << endl;
 }
 
-// Funcion para eliminar un paciente
+// Función para eliminar un paciente
 void eliminarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>& edades, vector<string>& generos, vector<string>& direcciones, vector<string>& telefonos, vector<string>& fechasIngreso, vector<string>& diagnosticos) {
     string id;
     cout << "Ingrese el ID del paciente que desea eliminar: ";
@@ -186,15 +210,24 @@ void eliminarPaciente(vector<string>& ids, vector<string>& nombres, vector<int>&
 
     for (size_t i = 0; i < ids.size(); ++i) {
         if (ids[i] == id) {
-            ids.erase(ids.begin() + i);
-            nombres.erase(nombres.begin() + i);
-            edades.erase(edades.begin() + i);
-            generos.erase(generos.begin() + i);
-            direcciones.erase(direcciones.begin() + i);
-            telefonos.erase(telefonos.begin() + i);
-            fechasIngreso.erase(fechasIngreso.begin() + i);
-            diagnosticos.erase(diagnosticos.begin() + i);
-            cout << "Paciente eliminado exitosamente." << endl;
+            cout << "Paciente encontrado: " << nombres[i] << endl;
+            cout << "¿Está seguro de que desea eliminar este paciente? (s/n): ";
+            char confirmacion;
+            cin >> confirmacion;
+            
+            if (confirmacion == 's' || confirmacion == 'S') {
+                ids.erase(ids.begin() + i);
+                nombres.erase(nombres.begin() + i);
+                edades.erase(edades.begin() + i);
+                generos.erase(generos.begin() + i);
+                direcciones.erase(direcciones.begin() + i);
+                telefonos.erase(telefonos.begin() + i);
+                fechasIngreso.erase(fechasIngreso.begin() + i);
+                diagnosticos.erase(diagnosticos.begin() + i);
+                cout << "Paciente eliminado exitosamente." << endl;
+            } else {
+                cout << "Eliminación cancelada." << endl;
+            }
             return;
         }
     }
