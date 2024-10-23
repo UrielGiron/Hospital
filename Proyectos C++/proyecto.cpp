@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 
@@ -22,9 +23,9 @@ void cargarDatos(vector<string>& ids, vector<string>& nombres, vector<int>& edad
         int edad;
 
         // Leer las primeras dos lineas del archivo
+       /*  getline(archivo, header);
         getline(archivo, header);
-        getline(archivo, header);
-
+ */
         while (archivo >> id >> edad) {
             archivo.ignore(); // Consume el salto de linea
             getline(archivo, nombre);
@@ -50,17 +51,19 @@ void cargarDatos(vector<string>& ids, vector<string>& nombres, vector<int>& edad
 
 // Funcion para guardar los datos en el archivo
 void guardarDatos(const vector<string>& ids, const vector<string>& nombres, const vector<int>& edades, const vector<string>& generos, const vector<string>& direcciones, const vector<string>& telefonos, const vector<string>& fechasIngreso, const vector<string>& diagnosticos) {
-    ofstream archivo("base_datos.txt");
+    ofstream archivo("base_datos.txt", ios::app);
     if (archivo.is_open()) {
         string nombreHospital = "Hospital General UMG";
         string fechaActual = obtenerFechaActual();
 
+        archivo << "-----------------------------------\n";
         archivo << "Hospital: " << nombreHospital << "\n";
         archivo << "Fecha de Generacion: " << fechaActual << "\n";
         archivo << "-----------------------------------\n";
 
         for (size_t i = 0; i < ids.size(); ++i) {
-            archivo << ids[i] << " " << edades[i] << "\n"
+            archivo << ids[i] << "\n" 
+                    << edades[i] << "\n"
                     << nombres[i] << "\n"
                     << generos[i] << "\n"
                     << direcciones[i] << "\n"
